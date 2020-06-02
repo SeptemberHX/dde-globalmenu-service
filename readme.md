@@ -1,6 +1,6 @@
 # DDE Global Menu Service
 
-Create the specific DBus (com.canonical.AppMenu.Registrar) for the global menu.
+Create the specific DBus (com.canonical.AppMenu.Registrar) for the global menu & gtk global menu dbus proxy
 
 Most of the codes are from the KDE.
 
