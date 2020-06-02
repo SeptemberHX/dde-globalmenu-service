@@ -1,0 +1,9 @@
+[Unit]
+Description=DDE Global Menu Service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/dde-globalmenu-service
+
+[Install]
+WantedBy=default.target

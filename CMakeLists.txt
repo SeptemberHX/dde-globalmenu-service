@@ -20,6 +20,7 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 find_package(Qt5Widgets REQUIRED)
 find_package(Qt5DBus REQUIRED)
 find_package(KF5WindowSystem REQUIRED)
+find_package(Qt5X11Extras REQUIRED)
 
 
 set(SRCS main.cpp
@@ -37,10 +38,13 @@ add_executable(${PROJECT} ${SRCS})
 target_include_directories(${PROJECT} PUBLIC
         ${Qt5Widgets_INCLUDE_DIRS}
         ${Qt5DBus_INCLUDE_DIRS}
+        ${Qt5X11Extras_INCLUDE_DIRS}
         )
 
 target_link_libraries(${PROJECT}
         Qt5::Widgets
         Qt5::DBus
+        Qt5::X11Extras
         KF5::WindowSystem
+        xcb
         )

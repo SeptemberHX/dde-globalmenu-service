@@ -1,0 +1,8 @@
+[Desktop Entry]
+Comment=DDE Global Menu Service
+Exec=/usr/bin/dde-globalmenu-service
+Hidden=false
+Name=DDE-GlobalMenu-service
+NoDisplay=true
+Type=Application
+X-GNOME-Autostart-enabled=true

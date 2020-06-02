@@ -31,12 +31,15 @@
 #include <QDBusMessage>
 #include <QDBusObjectPath>
 #include <QDBusServiceWatcher>
+#include <QX11Info>
 
 #include <KWindowSystem>
 #include <KWindowInfo>
 
 static const char* DBUS_SERVICE = "com.canonical.AppMenu.Registrar";
 static const char* DBUS_OBJECT_PATH = "/com/canonical/AppMenu/Registrar";
+static const QByteArray s_x11AppMenuServiceNamePropertyName = QByteArrayLiteral("_KDE_NET_WM_APPMENU_SERVICE_NAME");
+static const QByteArray s_x11AppMenuObjectPathPropertyName = QByteArrayLiteral("_KDE_NET_WM_APPMENU_OBJECT_PATH");
 
 MenuImporter::MenuImporter(QObject* parent)
 : QObject(parent)
@@ -87,6 +90,33 @@ void MenuImporter::RegisterWindow(WId id, const QDBusObjectPath& path)
     if (!m_serviceWatcher->watchedServices().contains(service)) {
         m_serviceWatcher->addWatchedService(service);
     }
+
+    auto *c = QX11Info::connection();
+
+    static xcb_atom_t s_serviceNameAtom = XCB_ATOM_NONE;
+    static xcb_atom_t s_objectPathAtom = XCB_ATOM_NONE;
+
+    auto setWindowProperty = [c](WId id, xcb_atom_t &atom, const QByteArray &name, const QByteArray &value) {
+        if (atom == XCB_ATOM_NONE) {
+            const xcb_intern_atom_cookie_t cookie = xcb_intern_atom(c, false, name.length(), name.constData());
+            QScopedPointer<xcb_intern_atom_reply_t, QScopedPointerPodDeleter> reply(xcb_intern_atom_reply(c, cookie, nullptr));
+            if (reply.isNull()) {
+                return;
+            }
+            atom = reply->atom;
+            if (atom == XCB_ATOM_NONE) {
+                return;
+            }
+        }
+
+        xcb_change_property(c, XCB_PROP_MODE_REPLACE, id, atom, XCB_ATOM_STRING,
+                            8, value.length(), value.constData());
+    };
+
+    // TODO only set the property if it doesn't already exist
+
+    setWindowProperty(id, s_serviceNameAtom, s_x11AppMenuServiceNamePropertyName, service.toUtf8());
+    setWindowProperty(id, s_objectPathAtom, s_x11AppMenuObjectPathPropertyName, path.path().toUtf8());
 
     emit WindowRegistered(id, service, path);
 }
