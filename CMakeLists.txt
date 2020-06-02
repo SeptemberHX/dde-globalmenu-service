@@ -22,15 +22,26 @@ find_package(Qt5DBus REQUIRED)
 find_package(KF5WindowSystem REQUIRED)
 find_package(Qt5X11Extras REQUIRED)
 
-
 set(SRCS main.cpp
         menuimporter.h menuimporter.cpp
         dbusmenutypes_p.h dbusmenutypes_p.cpp
         dbusmenushortcut_p.h dbusmenushortcut_p.cpp
+
+        # gmenu dbus proxy
+        utils.h utils.cpp
+        window.h window.cpp
+        menuproxy.h menuproxy.cpp
+        menu.h menu.cpp
+        icons.h icons.cpp
+        gdbusmenutypes_p.h gdbusmenutypes_p.cpp
+        actions.h actions.cpp
+        config-X11.h
         )
 
 qt5_add_dbus_adaptor(SRCS com.canonical.AppMenu.Registrar.xml
     menuimporter.h MenuImporter menuimporteradaptor MenuImporterAdaptor)
+
+qt5_add_dbus_adaptor(SRCS com.canonical.dbusmenu.xml window.h Window)
 
 
 add_executable(${PROJECT} ${SRCS})

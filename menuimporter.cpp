@@ -41,6 +41,7 @@ static const char* DBUS_OBJECT_PATH = "/com/canonical/AppMenu/Registrar";
 static const QByteArray s_x11AppMenuServiceNamePropertyName = QByteArrayLiteral("_KDE_NET_WM_APPMENU_SERVICE_NAME");
 static const QByteArray s_x11AppMenuObjectPathPropertyName = QByteArrayLiteral("_KDE_NET_WM_APPMENU_OBJECT_PATH");
 
+
 MenuImporter::MenuImporter(QObject* parent)
 : QObject(parent)
 , m_serviceWatcher(new QDBusServiceWatcher(this))

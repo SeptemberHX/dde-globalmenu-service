@@ -4,11 +4,22 @@
 #include "menuimporter.h"
 #include "menuimporteradaptor.h"
 
+#include "menuproxy.h"
+
 static const char* DBUS_SERVICE = "com.canonical.AppMenu.Registrar";
 static const char* DBUS_OBJECT_PATH = "/com/canonical/AppMenu/Registrar";
 
 int main(int argc, char *argv[]) {
     QApplication app(argc, argv);
+
+    qputenv("QT_QPA_PLATFORM", "xcb");
+
+    QGuiApplication::setDesktopSettingsAware(false);
+//    QCoreApplication::setAttribute(Qt::AA_DisableSessionManager);
+
+    app.setQuitOnLastWindowClosed(false);
+
+    MenuProxy proxy;
 
     /*
       Create a Chat instance and register it with the session bus only if
