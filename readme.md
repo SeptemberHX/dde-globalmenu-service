@@ -9,5 +9,5 @@ Most of the codes are from the KDE.
 * download the latest release
 * unzip the release file
 * cp `dde-globalmenu-service` to `/usr/bin/`
-* cp `dde-globalmenu.service` to `~/.config/autostart/`
+* cp `dde-globalmenu-service.desktop` to `~/.config/autostart/`
 * log out or reboot 
