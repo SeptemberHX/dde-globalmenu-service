@@ -6,6 +6,8 @@ Most of the codes are from the KDE.
 
 ## How to install
 
+### For Deepin V20
+
 * download the latest release
 * unzip the release file
 * cp `dde-globalmenu-service` to `/usr/bin/`
@@ -13,3 +15,7 @@ Most of the codes are from the KDE.
 * edit `~/.gtkrc-2.0`, add `gtk-modules=appmenu-gtk-module`
 * edit `~/.config/gtk-3.0/settings.ini`, add `gtk-modules=appmenu-gtk-module` in `[Settings]` section
 * log out or reboot 
+
+### For other distributions
+
+It needs to be built from source on your own.
