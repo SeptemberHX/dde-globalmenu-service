@@ -10,7 +10,13 @@ Most of the codes are from the KDE.
 
 * download the latest release
 * unzip the release file
+* cd `dde-globalmenu-service-master`
+* `mkdir build`
+* cd `build`
+* `cmake ..`
+* `make`
 * cp `dde-globalmenu-service` to `/usr/bin/`
+* cd ..
 * cp `dde-globalmenu-service.desktop` to `~/.config/autostart/`
 * edit `~/.gtkrc-2.0`, add `gtk-modules=appmenu-gtk-module`
 * edit `~/.config/gtk-3.0/settings.ini`, add `gtk-modules=appmenu-gtk-module` in `[Settings]` section
