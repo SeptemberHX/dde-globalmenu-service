@@ -3,6 +3,6 @@ Comment=DDE Global Menu Service
 Exec=/usr/bin/dde-globalmenu-service
 Hidden=false
 Name=DDE-GlobalMenu-service
-NoDisplay=true
+NoDisplay=false
 Type=Application
 X-GNOME-Autostart-enabled=true

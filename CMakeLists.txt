@@ -62,3 +62,6 @@ target_link_libraries(${PROJECT}
         KF5::WindowSystem
         ${XCB_LIBRARIES}
         )
+
+include(deb.cmake)
+include(CPack)
