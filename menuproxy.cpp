@@ -214,7 +214,7 @@ void MenuProxy::writeGtk2Settings()
     addOrRemoveAppMenuGtkModule(gtkModules);
 
     if (!gtkModules.isEmpty()) {
-        content += QStringLiteral("%1=%2").arg(s_gtkModules, gtkModules.join(QLatin1Char(':'))).toUtf8();
+        content += QStringLiteral("\n%1=%2").arg(s_gtkModules, gtkModules.join(QLatin1Char(':'))).toUtf8();
     }
 
     qDebug() << "  gtk-modules:" << gtkModules;
