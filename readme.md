@@ -8,16 +8,18 @@ Most of the codes are from the KDE.
 
 ### For Deepin V20
 
-* download the latest release
-* unzip the release file
-* cd `dde-globalmenu-service-master`
+Go to release page, download the latest deb package, and install the deb file.
+
+### Build on UOS
+
+* `sudo apt install git cmake g++ extra-cmake-modules libxcb-util0-dev`
+* `git clone https://github.com/SeptemberHX/dde-globalmenu-service.git`
+* `cd dde-globalmenu-service-master`
 * `mkdir build`
-* cd `build`
+* `cd build`
 * `cmake ..`
-* `make`
-* cp `dde-globalmenu-service` to `/usr/bin/`
-* cd ..
-* cp `dde-globalmenu-service.desktop` to `~/.config/autostart/`
+* `make -j8 package`
+* Install the generated \*.deb file. Enable autostart from the application menu. 
 * edit `~/.gtkrc-2.0`, add `gtk-modules=appmenu-gtk-module`
 * edit `~/.config/gtk-3.0/settings.ini`, add `gtk-modules=appmenu-gtk-module` in `[Settings]` section
 * log out or reboot 
