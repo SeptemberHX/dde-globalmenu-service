@@ -1,21 +1,8 @@
 /*
- * Copyright (C) 2018 Kai Uwe Broulik <kde@privat.broulik.de>
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- *
- */
+    SPDX-FileCopyrightText: 2018 Kai Uwe Broulik <kde@privat.broulik.de>
+
+    SPDX-License-Identifier: LGPL-2.1-or-later
+*/
 
 #include "menu.h"
 
@@ -33,19 +20,15 @@
 static const QString s_orgGtkMenus = QStringLiteral("org.gtk.Menus");
 
 Menu::Menu(const QString &serviceName, const QString &objectPath, QObject *parent)
-    : QObject(parent)
-    , m_serviceName(serviceName)
-    , m_objectPath(objectPath)
+        : QObject(parent)
+        , m_serviceName(serviceName)
+        , m_objectPath(objectPath)
 {
     Q_ASSERT(!serviceName.isEmpty());
     Q_ASSERT(!m_objectPath.isEmpty());
 
-    if (!QDBusConnection::sessionBus().connect(m_serviceName,
-                                               m_objectPath,
-                                               s_orgGtkMenus,
-                                               QStringLiteral("Changed"),
-                                               this,
-                                               SLOT(onMenuChanged(GMenuChangeList)))) {
+    if (!QDBusConnection::sessionBus()
+            .connect(m_serviceName, m_objectPath, s_orgGtkMenus, QStringLiteral("Changed"), this, SLOT(onMenuChanged(GMenuChangeList)))) {
         qDebug() << "Failed to subscribe to menu changes for" << parent << "on" << serviceName << "at" << objectPath;
     }
 }
@@ -67,13 +50,8 @@ void Menu::start(uint id)
 
     // dbus-send --print-reply --session --dest=:1.103 /org/libreoffice/window/104857641/menus/menubar org.gtk.Menus.Start array:uint32:0
 
-    QDBusMessage msg = QDBusMessage::createMethodCall(m_serviceName,
-                                                      m_objectPath,
-                                                      s_orgGtkMenus,
-                                                      QStringLiteral("Start"));
-    msg.setArguments({
-        QVariant::fromValue(QList<uint>{id})
-    });
+    QDBusMessage msg = QDBusMessage::createMethodCall(m_serviceName, m_objectPath, s_orgGtkMenus, QStringLiteral("Start"));
+    msg.setArguments({QVariant::fromValue(QList<uint>{id})});
 
     QDBusPendingReply<GMenuItemList> reply = QDBusConnection::sessionBus().asyncCall(msg);
     QDBusPendingCallWatcher *watcher = new QDBusPendingCallWatcher(reply, this);
@@ -83,12 +61,12 @@ void Menu::start(uint id)
         QDBusPendingReply<GMenuItemList> reply = *watcherPtr;
         if (reply.isError()) {
             qDebug() << "Failed to start subscription to" << id << "on" << m_serviceName << "at" << m_objectPath << reply.error();
-            emit failedToSubscribe(id);
+            Q_EMIT failedToSubscribe(id);
         } else {
             const bool hadMenu = !m_menus.isEmpty();
 
             const auto menus = reply.value();
-            for (auto menu : menus) {
+            for (const auto &menu : menus) {
                 m_menus[menu.id].append(menus);
             }
 
@@ -103,23 +81,20 @@ void Menu::start(uint id)
 
             // do we have a menu now? let's tell everyone
             if (!hadMenu && !m_menus.isEmpty()) {
-                emit menuAppeared();
+                Q_EMIT menuAppeared();
             }
 
-            emit subscribed(id);
+            Q_EMIT subscribed(id);
         }
     });
 }
 
 void Menu::stop(const QList<uint> &ids)
 {
-    QDBusMessage msg = QDBusMessage::createMethodCall(m_serviceName,
-                                                      m_objectPath,
-                                                      s_orgGtkMenus,
-                                                      QStringLiteral("End"));
+    QDBusMessage msg = QDBusMessage::createMethodCall(m_serviceName, m_objectPath, s_orgGtkMenus, QStringLiteral("End"));
     msg.setArguments({
-        QVariant::fromValue(ids) // don't let it unwrap it, hence in a variant
-    });
+                             QVariant::fromValue(ids) // don't let it unwrap it, hence in a variant
+                     });
 
     QDBusPendingReply<void> reply = QDBusConnection::sessionBus().asyncCall(msg);
     QDBusPendingCallWatcher *watcher = new QDBusPendingCallWatcher(reply, this);
@@ -131,12 +106,16 @@ void Menu::stop(const QList<uint> &ids)
             // remove all subscriptions that we unsubscribed from
             // TODO is there a nicer algorithm for that?
             // TODO remove all m_menus also?
-            m_subscriptions.erase(std::remove_if(m_subscriptions.begin(), m_subscriptions.end(),
-                                      std::bind(&QList<uint>::contains, m_subscriptions, std::placeholders::_1)),
-                                  m_subscriptions.end());
+            m_subscriptions.erase(
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+                    std::remove_if(m_subscriptions.begin(), m_subscriptions.end(), std::bind(&QList<uint>::contains, m_subscriptions, std::placeholders::_1)),
+#else
+                    std::remove_if(m_subscriptions.begin(), m_subscriptions.end(), std::bind(&QList<uint>::contains<uint>, m_subscriptions, std::placeholders::_1)),
+#endif
+                    m_subscriptions.end());
 
             if (m_subscriptions.isEmpty()) {
-                emit menuDisappeared();
+                Q_EMIT menuDisappeared();
             }
         }
         watcher->deleteLater();
@@ -288,16 +267,16 @@ void Menu::onMenuChanged(const GMenuChangeList &changes)
 
     // do we have a menu now? let's tell everyone
     if (!hadMenu && !m_menus.isEmpty()) {
-        emit menuAppeared();
+        Q_EMIT menuAppeared();
     } else if (hadMenu && m_menus.isEmpty()) {
-        emit menuDisappeared();
+        Q_EMIT menuDisappeared();
     }
 
     if (!dirtyItems.isEmpty()) {
-        emit itemsChanged(dirtyItems);
+        Q_EMIT itemsChanged(dirtyItems);
     }
 
-    emit menusChanged(dirtyMenus);
+    Q_EMIT menusChanged(dirtyMenus);
 }
 
 void Menu::actionsChanged(const QStringList &dirtyActions, const QString &prefix)
@@ -327,13 +306,13 @@ void Menu::actionsChanged(const QStringList &dirtyActions, const QString &prefix
         return;
     };
 
-    // now find in which menus these actions are and emit a change accordingly
+    // now find in which menus these actions are and Q_EMIT a change accordingly
     QVector<uint> dirtyItems;
 
     for (const QString &action : dirtyActions) {
         const QString prefixedAction = prefix + action;
 
-        forEachMenuItem([ &prefixedAction, &dirtyItems](int subscription, int section, int index, const QVariantMap &item) {
+        forEachMenuItem([&prefixedAction, &dirtyItems](int subscription, int section, int index, const QVariantMap &item) {
             const QString actionName = Utils::itemActionName(item);
 
             if (actionName == prefixedAction) {
@@ -346,7 +325,6 @@ void Menu::actionsChanged(const QStringList &dirtyActions, const QString &prefix
     }
 
     if (!dirtyItems.isEmpty()) {
-        emit itemsChanged(dirtyItems);
+        Q_EMIT itemsChanged(dirtyItems);
     }
 }
-

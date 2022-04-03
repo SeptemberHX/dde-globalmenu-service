@@ -1,34 +1,22 @@
 /*
- * Copyright (C) 2018 Kai Uwe Broulik <kde@privat.broulik.de>
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- *
- */
+    SPDX-FileCopyrightText: 2018 Kai Uwe Broulik <kde@privat.broulik.de>
+
+    SPDX-License-Identifier: LGPL-2.1-or-later
+*/
 
 #pragma once
 
-#include <QObject>
 #include <QDBusContext>
+#include <QMultiHash>
+#include <QObject>
 #include <QString>
 #include <QVector>
 #include <QWindow> // for WId
 
 #include <functional>
 
+#include "../dbusmenutypes_p.h"
 #include "gdbusmenutypes_p.h"
-#include "gmenu-dbusmenu-proxy/dbusmenutypes_p.h"
 
 class QDBusVariant;
 
@@ -37,7 +25,7 @@ class Menu;
 
 class Window : public QObject, protected QDBusContext
 {
-    Q_OBJECT
+Q_OBJECT
 
     // DBus
     Q_PROPERTY(QString Status READ status)
@@ -83,7 +71,7 @@ public:
     QString status() const;
     uint version() const;
 
-signals:
+Q_SIGNALS:
     // don't want to pollute X stuff into Menu, let all of that be in MenuProxy
     void requestWriteWindowProperties();
     void requestRemoveWindowProperties();
@@ -124,7 +112,7 @@ private:
 
     QString m_proxyObjectPath; // our object path on this proxy app
 
-    QHash<int, QDBusMessage> m_pendingGetLayouts;
+    QMultiHash<int, QDBusMessage> m_pendingGetLayouts;
 
     Menu *m_applicationMenu = nullptr;
     Menu *m_menuBar = nullptr;
@@ -136,5 +124,4 @@ private:
     Actions *m_windowActions = nullptr;
 
     bool m_menuInited = false;
-
 };

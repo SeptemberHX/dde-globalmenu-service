@@ -1,21 +1,8 @@
 /*
- * Copyright (C) 2018 Kai Uwe Broulik <kde@privat.broulik.de>
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- *
- */
+    SPDX-FileCopyrightText: 2018 Kai Uwe Broulik <kde@privat.broulik.de>
+
+    SPDX-License-Identifier: LGPL-2.1-or-later
+*/
 
 #include "actions.h"
 
@@ -30,9 +17,9 @@
 static const QString s_orgGtkActions = QStringLiteral("org.gtk.Actions");
 
 Actions::Actions(const QString &serviceName, const QString &objectPath, QObject *parent)
-    : QObject(parent)
-    , m_serviceName(serviceName)
-    , m_objectPath(objectPath)
+        : QObject(parent)
+        , m_serviceName(serviceName)
+        , m_objectPath(objectPath)
 {
     Q_ASSERT(!serviceName.isEmpty());
     Q_ASSERT(!m_objectPath.isEmpty());
@@ -42,7 +29,7 @@ Actions::Actions(const QString &serviceName, const QString &objectPath, QObject 
                                                s_orgGtkActions,
                                                QStringLiteral("Changed"),
                                                this,
-                                               SLOT(onActionsChanged(QStringList,StringBoolMap,QVariantMap,GMenuActionMap)))) {
+                                               SLOT(onActionsChanged(QStringList, StringBoolMap, QVariantMap, GMenuActionMap)))) {
         qDebug() << "Failed to subscribe to action changes for" << parent << "on" << serviceName << "at" << objectPath;
     }
 }
@@ -51,10 +38,7 @@ Actions::~Actions() = default;
 
 void Actions::load()
 {
-    QDBusMessage msg = QDBusMessage::createMethodCall(m_serviceName,
-                                                      m_objectPath,
-                                                      s_orgGtkActions,
-                                                      QStringLiteral("DescribeAll"));
+    QDBusMessage msg = QDBusMessage::createMethodCall(m_serviceName, m_objectPath, s_orgGtkActions, QStringLiteral("DescribeAll"));
 
     QDBusPendingReply<GMenuActionMap> reply = QDBusConnection::sessionBus().asyncCall(msg);
     QDBusPendingCallWatcher *watcher = new QDBusPendingCallWatcher(reply, this);
@@ -62,10 +46,10 @@ void Actions::load()
         QDBusPendingReply<GMenuActionMap> reply = *watcher;
         if (reply.isError()) {
             qDebug() << "Failed to get actions from" << m_serviceName << "at" << m_objectPath << reply.error();
-            emit failedToLoad();
+            Q_EMIT failedToLoad();
         } else {
             m_actions = reply.value();
-            emit loaded();
+            Q_EMIT loaded();
         }
         watcher->deleteLater();
     });
@@ -94,10 +78,7 @@ void Actions::trigger(const QString &name, const QVariant &target, uint timestam
         return;
     }
 
-    QDBusMessage msg = QDBusMessage::createMethodCall(m_serviceName,
-                                                      m_objectPath,
-                                                      s_orgGtkActions,
-                                                      QStringLiteral("Activate"));
+    QDBusMessage msg = QDBusMessage::createMethodCall(m_serviceName, m_objectPath, s_orgGtkActions, QStringLiteral("Activate"));
     msg << name;
 
     QVariantList args;
@@ -134,10 +115,7 @@ bool Actions::isValid() const
     return !m_actions.isEmpty();
 }
 
-void Actions::onActionsChanged(const QStringList &removed,
-                               const StringBoolMap &enabledChanges,
-                               const QVariantMap &stateChanges,
-                               const GMenuActionMap &added)
+void Actions::onActionsChanged(const QStringList &removed, const StringBoolMap &enabledChanges, const QVariantMap &stateChanges, const GMenuActionMap &added)
 {
     // Collect the actions that we removed, altered, or added, so we can eventually signal changes for all menus that contain one of those actions
     QStringList dirtyActions;
@@ -201,18 +179,12 @@ void Actions::onActionsChanged(const QStringList &removed,
     for (auto it = added.constBegin(), end = added.constEnd(); it != end; ++it) {
         const QString &actionName = it.key();
 
-//        if (DBUSMENUPROXY().isInfoEnabled()) {
-//            if (m_actions.contains(actionName)) {
-//                qDebug() << "Got new action" << actionName << "that we already have, overwriting existing one";
-//            }
-//        }
-
         m_actions.insert(actionName, it.value());
 
         dirtyActions.append(actionName);
     }
 
     if (!dirtyActions.isEmpty()) {
-        emit actionsChanged(dirtyActions);
+        Q_EMIT actionsChanged(dirtyActions);
     }
 }

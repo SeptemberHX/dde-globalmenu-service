@@ -1,21 +1,8 @@
 /*
- * Copyright (C) 2018 Kai Uwe Broulik <kde@privat.broulik.de>
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- *
- */
+    SPDX-FileCopyrightText: 2018 Kai Uwe Broulik <kde@privat.broulik.de>
+
+    SPDX-License-Identifier: LGPL-2.1-or-later
+*/
 
 #pragma once
 
@@ -23,12 +10,12 @@
 #include <QString>
 #include <QVector>
 
+#include "../dbusmenutypes_p.h"
 #include "gdbusmenutypes_p.h"
-#include "gmenu-dbusmenu-proxy/dbusmenutypes_p.h"
 
 class Menu : public QObject
 {
-    Q_OBJECT
+Q_OBJECT
 
 public:
     Menu(const QString &serviceName, const QString &objectPath, QObject *parent = nullptr);
@@ -49,10 +36,10 @@ public:
     QVariantMap getItem(int id) const; // bool ok argument?
     QVariantMap getItem(int subscription, int sectionId, int id) const;
 
-public slots:
+public Q_SLOTS:
     void actionsChanged(const QStringList &dirtyActions, const QString &prefix);
 
-signals:
+Q_SIGNALS:
     void menuAppeared(); // emitted the first time a menu was successfully loaded
     void menuDisappeared();
 
@@ -62,7 +49,7 @@ signals:
     void itemsChanged(const QVector<uint> &itemIds);
     void menusChanged(const QVector<uint> &menuIds);
 
-private slots:
+private Q_SLOTS:
     void onMenuChanged(const GMenuChangeList &changes);
 
 private:
@@ -77,5 +64,4 @@ private:
 
     QString m_serviceName;
     QString m_objectPath;
-
 };

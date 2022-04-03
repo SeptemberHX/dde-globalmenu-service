@@ -24,10 +24,12 @@ find_package(Qt5DBus REQUIRED)
 find_package(KF5WindowSystem REQUIRED)
 find_package(Qt5X11Extras REQUIRED)
 find_package(XCB REQUIRED COMPONENTS xcb)
+find_package(KF5Config)
+find_package(KF5CoreAddons)
 
 set(SRCS main.cpp
         menuimporter.h menuimporter.cpp
-        gmenu-dbusmenu-proxy/dbusmenutypes_p.h gmenu-dbusmenu-proxy/dbusmenutypes_p.cpp
+        dbusmenutypes_p.h dbusmenutypes_p.cpp
         dbusmenushortcut_p.h dbusmenushortcut_p.cpp
 
         # gmenu dbus proxy
@@ -36,10 +38,10 @@ set(SRCS main.cpp
         gmenu-dbusmenu-proxy/menuproxy.h gmenu-dbusmenu-proxy/menuproxy.cpp
         gmenu-dbusmenu-proxy/menu.h gmenu-dbusmenu-proxy/menu.cpp
         gmenu-dbusmenu-proxy/icons.h gmenu-dbusmenu-proxy/icons.cpp
-        gdbusmenutypes_p.h gdbusmenutypes_p.cpp
+        gmenu-dbusmenu-proxy/gdbusmenutypes_p.h gmenu-dbusmenu-proxy/gdbusmenutypes_p.cpp
         gmenu-dbusmenu-proxy/actions.h gmenu-dbusmenu-proxy/actions.cpp
         config-X11.h
-        )
+        gmenu-dbusmenu-proxy/debug.h)
 
 qt5_add_dbus_adaptor(SRCS com.canonical.AppMenu.Registrar.xml
     menuimporter.h MenuImporter menuimporteradaptor MenuImporterAdaptor)
@@ -61,6 +63,9 @@ target_link_libraries(${PROJECT}
         Qt5::X11Extras
         KF5::WindowSystem
         ${XCB_LIBRARIES}
+        KF5::ConfigCore
+        KF5::ConfigGui
+        KF5::CoreAddons
         )
 
 include(deb.cmake)

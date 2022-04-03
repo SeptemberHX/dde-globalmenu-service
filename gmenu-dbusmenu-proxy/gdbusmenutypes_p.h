@@ -1,21 +1,8 @@
 /*
- * Copyright (C) 2018 Kai Uwe Broulik <kde@privat.broulik.de>
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- *
- */
+    SPDX-FileCopyrightText: 2018 Kai Uwe Broulik <kde@privat.broulik.de>
+
+    SPDX-License-Identifier: LGPL-2.1-or-later
+*/
 
 #pragma once
 
@@ -34,8 +21,7 @@ using StringBoolMap = QMap<QString, bool>;
 Q_DECLARE_METATYPE(StringBoolMap);
 
 // Menu item itself (Start method)
-struct GMenuItem
-{
+struct GMenuItem {
     uint id;
     uint section;
     VariantMapList items;
@@ -49,8 +35,7 @@ using GMenuItemList = QList<GMenuItem>;
 Q_DECLARE_METATYPE(GMenuItemList);
 
 // Information about what section or submenu to use for a particular entry
-struct GMenuSection
-{
+struct GMenuSection {
     uint subscription;
     uint menu;
 };
@@ -60,8 +45,7 @@ QDBusArgument &operator<<(QDBusArgument &argument, const GMenuSection &item);
 const QDBusArgument &operator>>(const QDBusArgument &argument, GMenuSection &item);
 
 // Changes of a menu item (Changed signal)
-struct GMenuChange
-{
+struct GMenuChange {
     uint subscription;
     uint menu;
 
@@ -78,8 +62,7 @@ using GMenuChangeList = QList<GMenuChange>;
 Q_DECLARE_METATYPE(GMenuChangeList);
 
 // An application action
-struct GMenuAction
-{
+struct GMenuAction {
     bool enabled;
     QDBusSignature signature;
     QVariantList state;
@@ -92,8 +75,7 @@ const QDBusArgument &operator>>(const QDBusArgument &argument, GMenuAction &item
 using GMenuActionMap = QMap<QString, GMenuAction>;
 Q_DECLARE_METATYPE(GMenuActionMap);
 
-struct GMenuActionsChange
-{
+struct GMenuActionsChange {
     QStringList removed;
     QMap<QString, bool> enabledChanged;
     QVariantMap stateChanged;
