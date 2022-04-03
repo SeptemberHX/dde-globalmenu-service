@@ -26,7 +26,7 @@
 
 #include "menuimporter.h"
 #include "menuimporteradaptor.h"
-#include "dbusmenutypes_p.h"
+#include "gmenu-dbusmenu-proxy/dbusmenutypes_p.h"
 
 #include <QDBusMessage>
 #include <QDBusObjectPath>

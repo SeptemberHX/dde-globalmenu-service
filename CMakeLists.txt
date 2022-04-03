@@ -27,24 +27,24 @@ find_package(XCB REQUIRED COMPONENTS xcb)
 
 set(SRCS main.cpp
         menuimporter.h menuimporter.cpp
-        dbusmenutypes_p.h dbusmenutypes_p.cpp
+        gmenu-dbusmenu-proxy/dbusmenutypes_p.h gmenu-dbusmenu-proxy/dbusmenutypes_p.cpp
         dbusmenushortcut_p.h dbusmenushortcut_p.cpp
 
         # gmenu dbus proxy
-        utils.h utils.cpp
-        window.h window.cpp
-        menuproxy.h menuproxy.cpp
-        menu.h menu.cpp
-        icons.h icons.cpp
+        gmenu-dbusmenu-proxy/utils.h gmenu-dbusmenu-proxy/utils.cpp
+        gmenu-dbusmenu-proxy/window.h gmenu-dbusmenu-proxy/window.cpp
+        gmenu-dbusmenu-proxy/menuproxy.h gmenu-dbusmenu-proxy/menuproxy.cpp
+        gmenu-dbusmenu-proxy/menu.h gmenu-dbusmenu-proxy/menu.cpp
+        gmenu-dbusmenu-proxy/icons.h gmenu-dbusmenu-proxy/icons.cpp
         gdbusmenutypes_p.h gdbusmenutypes_p.cpp
-        actions.h actions.cpp
+        gmenu-dbusmenu-proxy/actions.h gmenu-dbusmenu-proxy/actions.cpp
         config-X11.h
         )
 
 qt5_add_dbus_adaptor(SRCS com.canonical.AppMenu.Registrar.xml
     menuimporter.h MenuImporter menuimporteradaptor MenuImporterAdaptor)
 
-qt5_add_dbus_adaptor(SRCS com.canonical.dbusmenu.xml window.h Window)
+qt5_add_dbus_adaptor(SRCS com.canonical.dbusmenu.xml gmenu-dbusmenu-proxy/window.h Window)
 
 
 add_executable(${PROJECT} ${SRCS})

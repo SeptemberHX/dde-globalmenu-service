@@ -4,7 +4,7 @@
 #include "menuimporter.h"
 #include "menuimporteradaptor.h"
 
-#include "menuproxy.h"
+#include "gmenu-dbusmenu-proxy/menuproxy.h"
 
 static const char* DBUS_SERVICE = "com.canonical.AppMenu.Registrar";
 static const char* DBUS_OBJECT_PATH = "/com/canonical/AppMenu/Registrar";

@@ -24,7 +24,7 @@
 #include <QVector>
 
 #include "gdbusmenutypes_p.h"
-#include "dbusmenutypes_p.h"
+#include "gmenu-dbusmenu-proxy/dbusmenutypes_p.h"
 
 class Menu : public QObject
 {

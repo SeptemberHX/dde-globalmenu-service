@@ -30,10 +30,10 @@
 
 #include <algorithm>
 
-#include "actions.h"
+#include "gmenu-dbusmenu-proxy/actions.h"
 #include "dbusmenuadaptor.h"
-#include "icons.h"
-#include "menu.h"
+#include "gmenu-dbusmenu-proxy/icons.h"
+#include "gmenu-dbusmenu-proxy/menu.h"
 #include "utils.h"
 
 #include "dbusmenushortcut_p.h"
