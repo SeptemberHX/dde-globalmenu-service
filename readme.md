@@ -12,7 +12,7 @@ Go to release page, download the latest deb package, and install the deb file.
 
 ### Build on UOS
 
-* `sudo apt install git cmake g++ extra-cmake-modules libxcb-util0-dev`
+* `sudo apt install git cmake g++ extra-cmake-modules libxcb-util-dev`
 * `git clone https://github.com/SeptemberHX/dde-globalmenu-service.git`
 * `cd dde-globalmenu-service-master`
 * `mkdir build`
