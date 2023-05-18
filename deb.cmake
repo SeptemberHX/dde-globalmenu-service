@@ -1,6 +1,6 @@
 set(_VERSION_MAJOR 1)
-set(_VERSION_MINOR 0)
-set(_VERSION_PATCH 1)
+set(_VERSION_MINOR 1)
+set(_VERSION_PATCH 0)
 
 set(CPACK_GENERATOR "DEB")
 
@@ -22,7 +22,7 @@ set(CPACK_DEBIAN_PACKAGE_ARCHITECTURE "amd64")
 
 # 设置依赖
 set(CPACK_DEBIAN_PACKAGE_DEPENDS
-        "appmenu-gtk2-module, appmenu-gtk3-module, libdbusmenu-gtk3-4, libdbusmenu-gtk4, libdbusmenu-qt5-2")
+        "libdbusmenu-gtk3-4, libdbusmenu-gtk4, libdbusmenu-qt5-2")
 
 # 设置section
 set(CPACK_DEBIAN_PACKAGE_SECTION "utils")
